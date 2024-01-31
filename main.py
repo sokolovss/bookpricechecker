@@ -1,8 +1,11 @@
+import logging
+import sched
+import time
+
 import requests
 from bs4 import BeautifulSoup
-import sched, time
 from plyer import notification
-import logging
+
 logger = logging.getLogger(__name__)
 
 # TargetPrice is a constant representing the target price for the book
@@ -16,14 +19,16 @@ URL2 = "https://www.amazon.ca/gp/product/B088TCNVGJ?notRedirectToSDP=1&ref_=dbs_
 
 s = sched.scheduler(time.time, time.sleep)
 
+
 # Notify is a function that sends a system notification with a given message.
 def notify(message):
     notification.notify(
-        title = "Price Notification",
-        message = message,
-        app_icon = "assets/information.png",
-        timeout = 10,
+        title="Price Notification",
+        message=message,
+        app_icon="assets/information.png",
+        timeout=10,
     )
+
 
 # CheckPrice is a function that checks the prices of books on Amazon and sends system notifications.
 def check_price(sc):
@@ -51,7 +56,8 @@ def check_price(sc):
     else:
         notify(f"Price for the second book is now ${price:.2f}, more than $10")
 
-    s.enter(7200, 1, check_price, (sc,)) # Check every 2 hours.
+    s.enter(7200, 1, check_price, (sc,))  # Check every 2 hours.
+
 
 s.enter(0, 1, check_price, (s,))
 s.run()
